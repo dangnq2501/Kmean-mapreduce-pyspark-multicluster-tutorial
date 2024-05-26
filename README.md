@@ -64,12 +64,12 @@ First, we will use Tailscale to create a common network connecting all devices.
     nano $SPARK_HOME/conf/spark-env.sh
    ```
    Now, you can check the Spark UI at `<master_tailscale_ip>:8080` and ensure that all devices connected to Tailscale can access it.
-   [Master-UI](images/master.jpg)
+   ![Master-UI](images/master.jpg)
 3. Set up the workers similarly and run the following command to connect the worker to the master:
    ```sh
     $SPARK_HOME/sbin/start-worker.sh spark://<master-tailscale-ip>:7077
    ```
-    [Add-worker](images/sub_worker.jpg)
+    ![Add-worker](images/sub_worker.jpg)
 4. On the Spark UI, you will notice the recently added worker in the workers section, indicating a successful connection.
-    [Add-done](images/worker_up.jpg)
+    ![Add-done](images/worker_up.jpg)
 By following these steps, you will have a fully configured Spark cluster running across multiple devices, ready to process large datasets with parallel algorithms like KMeans in PySpark. 
