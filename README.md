@@ -27,7 +27,7 @@ First, we will use Tailscale to create a common network connecting all devices.
 5. Other devices will use this link and click "Accept" to join the network.
 
 ## Installing Spark
-1. Download Spark from Apache Spark Downloads.
+1. Download Spark from Apache Spark Downloads. (you can refer to this [Link](https://login.tailscale.com/))
 2. Extract the file and set the Spark folder location:
    ```sh
    export SPARK_HOME=<path_to_spark_folder>
