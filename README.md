@@ -27,7 +27,7 @@ First, we will use Tailscale to create a common network connecting all devices.
 5. Other devices will use this link and click "Accept" to join the network.
 
 ## Installing Spark
-1. Download Spark from Apache Spark Downloads. (you can refer to this [Link](https://login.tailscale.com/))
+1. Download Spark from Apache Spark Downloads. (you can refer to this [Blog](https://login.tailscale.com/))
 2. Extract the file and set the Spark folder location:
    ```sh
    export SPARK_HOME=<path_to_spark_folder>
@@ -72,4 +72,32 @@ First, we will use Tailscale to create a common network connecting all devices.
     ![Add-worker](images/sub_worker.jpg)
 4. On the Spark UI, you will notice the recently added worker in the workers section, indicating a successful connection.
     ![Add-done](images/worker_up.jpg)
-By following these steps, you will have a fully configured Spark cluster running across multiple devices, ready to process large datasets with parallel algorithms like KMeans in PySpark. 
+By following these steps, you will have a fully configured Spark cluster running across multiple devices, ready to process large datasets with parallel algorithms like KMeans in PySpark.
+
+## Kmean pyspark mapreduce explaination
+- First thing in all pyspark code is you need to start a spark session and connect it to some master. In my case, I use SparkContext (don't worry, pyspark session always provide a way to connect to master's server)
+   ```sh
+   conf = SparkConf().setAppName("Kmean_RandomImage").setMaster("local[*]") #set to your master-tailscale-ip (ex: spark://100.108.166.72:7077)
+   sc = SparkContext(conf=conf)
+   ```
+- In the end you will need to stop the spark session or you will run in some error like this machine cant handle 2 spark session
+   ```sh
+   sc.stop()
+   ```
+- Alright so let dive in the kmean-mapreduce, in the MAP part, it will try to map your data into (key, value) pair. For ex, in my code :
+   ```sh
+   closest = data_rdd.map(lambda x: (np.argmin([np.linalg.norm(x - c) for c in centroids.value]), (x, 1)))
+   ```
+   I mapped all 1x3 vector into (nearest cluster, (that vector, 1)) pair, key = nearest cluster, value = (that vector, 1)
+  
+- In the REDUCE part, we will group all (key, value) pair which has the same key (achieved in previous stage) together then reduce it into a single value
+   ```sh
+   sums = closest.reduceByKey(lambda x, y: (np.add(x[0], y[0]).astype(np.float64), x[1] + y[1]))
+   ```
+   all (nearest cluster, (that vector, 1)) turn into (sum of all vector, count), pay attention that this is another (key, value) pair, this is a trick for implementation
+- Finally, we just need to recompute the cluster position to achive complete Kmean algorithm
+   ```sh
+   new_centroids = sums.map(lambda x: (x[0], [x[1][0][i] / x[1][1] for i in range(len(x[1][0]))])).collect()
+   ```
+
+That's the end of our tutorial, this thing gave us a really hard time so we just think sb else will need it as much as us. Feel free to report bugs/errors or ask any questions.
