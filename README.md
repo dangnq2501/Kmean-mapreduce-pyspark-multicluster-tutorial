@@ -63,6 +63,16 @@ First, we will use Tailscale to create a common network connecting all devices.
    ```sh
     nano $SPARK_HOME/conf/spark-env.sh
    ```
+   To grant sufficient permissions for the worker to connect to the master, you need to add the following configurations to the end of the `spark-defaults.conf` file in the `spark/conf` folder:
+   ```sh
+   spark.authenticate true
+   spark.authenticate.secret 4oQt6aOPvhOwVrWj4Q7QX73kGdSrU4kd2JYmwiueibg
+   spark.acls.enable true
+   spark.ui.view.acls=*
+   spark.modify.acls=*
+   spark.ui.view.acls.groups=*
+   spark.modify.acls.groups=*
+   ```
    Now, you can check the Spark UI at `<master_tailscale_ip>:8080` and ensure that all devices connected to Tailscale can access it.
    ![Master-UI](images/master.jpg)
 3. Set up the workers similarly and run the following command to connect the worker to the master:
