@@ -73,7 +73,7 @@ First, we will use Tailscale to create a common network connecting all devices.
    spark.ui.view.acls.groups=*
    spark.modify.acls.groups=*
    ```
-   You can generate a random secret key for '<you-secret-key>' using a variety of tools and programming languages. Here is a simple example using Python, which is commonly available on most systems. This command will generate a random secret key and print it to the console:
+   You can generate a random secret key for `<you-secret-key>` using a variety of tools and programming languages. Here is a simple example using Python, which is commonly available on most systems. This command will generate a random secret key and print it to the console:
    ```sh
     openssl rand -base64 32
    ```
