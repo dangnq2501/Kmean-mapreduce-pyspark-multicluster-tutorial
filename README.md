@@ -66,14 +66,14 @@ First, we will use Tailscale to create a common network connecting all devices.
    To grant sufficient permissions for the worker to connect to the master, you need to add the following configurations to the end of the `spark-defaults.conf` file in the `spark/conf` folder:
    ```sh
    spark.authenticate true
-   spark.authenticate.secret <you-secret-key>
+   spark.authenticate.secret <your-secret-key>
    spark.acls.enable true
    spark.ui.view.acls=*
    spark.modify.acls=*
    spark.ui.view.acls.groups=*
    spark.modify.acls.groups=*
    ```
-   You can generate a random secret key for `<you-secret-key>` using a variety of tools and programming languages. Here is a simple example using Python, which is commonly available on most systems. This command will generate a random secret key and print it to the console:
+   You can generate a random secret key for `<your-secret-key>` using a variety of tools and programming languages. Here is a simple example using Python, which is commonly available on most systems. This command will generate a random secret key and print it to the console:
    ```sh
     openssl rand -base64 32
    ```
