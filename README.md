@@ -66,21 +66,25 @@ First, we will use Tailscale to create a common network connecting all devices.
    To grant sufficient permissions for the worker to connect to the master, you need to add the following configurations to the end of the `spark-defaults.conf` file in the `spark/conf` folder:
    ```sh
    spark.authenticate true
-   spark.authenticate.secret 4oQt6aOPvhOwVrWj4Q7QX73kGdSrU4kd2JYmwiueibg
+   spark.authenticate.secret <you-secret-key>
    spark.acls.enable true
    spark.ui.view.acls=*
    spark.modify.acls=*
    spark.ui.view.acls.groups=*
    spark.modify.acls.groups=*
    ```
+   You can generate a random secret key for '<you-secret-key>' using a variety of tools and programming languages. Here is a simple example using Python, which is commonly available on most systems. This command will generate a random secret key and print it to the console:
+   ```sh
+    openssl rand -base64 32
+   ```
    Now, you can check the Spark UI at `<master_tailscale_ip>:8080` and ensure that all devices connected to Tailscale can access it.
    ![Master-UI](images/master.jpg)
-3. Set up the workers similarly and run the following command to connect the worker to the master:
+4. Set up the workers similarly and run the following command to connect the worker to the master:
    ```sh
     $SPARK_HOME/sbin/start-worker.sh spark://<master-tailscale-ip>:7077
    ```
     ![Add-worker](images/sub_worker.jpg)
-4. On the Spark UI, you will notice the recently added worker in the workers section, indicating a successful connection.
+5. On the Spark UI, you will notice the recently added worker in the workers section, indicating a successful connection.
     ![Add-done](images/worker_up.jpg)
 By following these steps, you will have a fully configured Spark cluster running across multiple devices, ready to process large datasets with parallel algorithms like KMeans in PySpark.
 
